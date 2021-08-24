@@ -84,7 +84,7 @@ class Blockchain {
      */
     requestMessageOwnershipVerification(address) {
         return new Promise((resolve) => {
-            
+            resolve(`${address}:${new Date().getTime().toString().slice(0,-3)}:starRegistry`);
         });
     }
 
@@ -107,6 +107,9 @@ class Blockchain {
      */
     submitStar(address, message, signature, star) {
         let self = this;
+        let message_time = parseInt(message.split(':')[1])
+        let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
+        // this._addBlock
         return new Promise(async (resolve, reject) => {
             
         });
