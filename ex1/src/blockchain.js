@@ -10,6 +10,7 @@
 
 const SHA256 = require('crypto-js/sha256');
 const BlockClass = require('./block.js');
+var bitcoin = require('bitcoinjs-lib') // v4.x.x
 const bitcoinMessage = require('bitcoinjs-message');
 
 class Blockchain {
@@ -107,11 +108,24 @@ class Blockchain {
      */
     submitStar(address, message, signature, star) {
         let self = this;
-        let message_time = parseInt(message.split(':')[1])
-        let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
         // this._addBlock
         return new Promise(async (resolve, reject) => {
-            
+            let message_time = parseInt(message.split(':')[1])
+            let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
+            let time_elapsed = currentTime - message_time;
+            if (time_elapsed < 500 * 60) {
+                let ok = bitcoinMessage.verify(message, address, signature);
+                if (ok) {
+                    resolve(time_elapsed);
+                }
+                else {
+                    reject("Are you trying to defraud our Star System? Bitcoin message does not verify! Please try again latter or get lost");
+                }
+                
+            }
+            else {
+                reject("Start submission has taken too long. Please try getting new validation message and resubmit.");
+            }
         });
     }
 
